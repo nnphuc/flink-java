@@ -18,6 +18,7 @@ import java.time.Duration;
 import java.util.Properties;
 
 import static org.apache.flink.table.api.Expressions.$;
+import static org.apache.flink.table.api.Expressions.lit;
 
 public class TestKafka {
     public static void main(String[] args) throws Exception {
@@ -41,34 +42,46 @@ public class TestKafka {
 //        });
 
         tEnv.executeSql("CREATE TABLE log (\n" +
-                "  `message` Array<string>,\n" +
-                "  `rowtime` TIMESTAMP(3) METADATA FROM 'timestamp',\n" +
-                "  WATERMARK FOR `rowtime` AS `rowtime` - INTERVAL '1' SECOND\n" +
-                ") WITH (\n" +
-                "  'connector' = 'kafka',\n" +
-                "  'topic' = 'test',\n" +
-                "  'csv.array-element-delimiter' = '|',\n" +
-                "  'properties.bootstrap.servers' = 'localhost:9092',\n" +
-                "  'format' = 'csv'\n" +
-                ")");
+            "  `message` Array<string>,\n" +
+            "  `rowtime` TIMESTAMP(3) METADATA FROM 'timestamp',\n" +
+            "  WATERMARK FOR `rowtime` AS `rowtime` - INTERVAL '1' SECOND\n" +
+            ") WITH (\n" +
+            "  'connector' = 'kafka',\n" +
+            "  'topic' = 'test',\n" +
+            "  'csv.array-element-delimiter' = '|',\n" +
+            "  'properties.bootstrap.servers' = 'localhost:9092',\n" +
+            "  'format' = 'csv'\n" +
+            ")");
+
+        tEnv.executeSql("CREATE TABLE myoutput (\n" +
+            "  `message` Array<string>\n" +
+            ") WITH (\n" +
+            "  'connector' = 'kafka',\n" +
+            "  'topic' = 'out',\n" +
+            "  'csv.array-element-delimiter' = '|',\n" +
+            "  'properties.bootstrap.servers' = 'localhost:9092',\n" +
+            "  'format' = 'csv'\n" +
+            ")");
 
 
         tEnv.executeSql("create view l1 as select rowtime, message[1] as tmp, message[1] as userId, message[2] as actionId, cast(message[11] as bigint) as gold,\n" +
-                "proctime() as proctime\n" +
-                "from log");
+            "proctime() as proctime\n" +
+            "from log");
 
 
-
-        Table r1 = tEnv.sqlQuery("SELECT HOP_START(rowtime, INTERVAL '1' SECOND, INTERVAL '10' SECOND) as startTime, actionId, count(distinct userId) as cntUser,\n" +
-                " count(*) as action\n" +
-                "FROM l1\n" +
-                "GROUP BY HOP(rowtime, INTERVAL '1' SECOND, INTERVAL '10' SECOND), actionId");
+        Table r1 = tEnv.sqlQuery("SELECT HOP_START(rowtime, INTERVAL '1' SECOND, INTERVAL '10' SECOND) as startTime," +
+            " actionId, count(distinct userId) as cntUser,\n" +
+            " count(*) as action\n" +
+            "FROM l1\n" +
+            "GROUP BY HOP(rowtime, INTERVAL '1' SECOND, INTERVAL '10' SECOND), actionId");
         CloseableIterator<Row> iter = r1.execute().collect();
         while (iter.hasNext()) {
             Row row = iter.next();
+            Table table = tEnv.from("myoutput");
+            table.addColumns(lit(new String[]{"1", "2", "3"}));
+            table.execute();
             System.out.println(row.getField(0));
         }
-
     }
 
 }
