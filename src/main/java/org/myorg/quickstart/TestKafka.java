@@ -53,11 +53,10 @@ public class TestKafka {
                 ")");
 
 
-        Table l1 = tEnv.sqlQuery("select rowtime, message[1] as tmp, message[1] as userId, message[2] as actionId, cast(message[11] as bigint) as gold,\n" +
+        tEnv.executeSql("create view l1 as select rowtime, message[1] as tmp, message[1] as userId, message[2] as actionId, cast(message[11] as bigint) as gold,\n" +
                 "proctime() as proctime\n" +
                 "from log");
 
-        tEnv.createTemporaryView("l1", l1);
 
 
         Table r1 = tEnv.sqlQuery("SELECT HOP_START(rowtime, INTERVAL '1' SECOND, INTERVAL '10' SECOND) as startTime, actionId, count(distinct userId) as cntUser,\n" +
@@ -66,7 +65,8 @@ public class TestKafka {
                 "GROUP BY HOP(rowtime, INTERVAL '1' SECOND, INTERVAL '10' SECOND), actionId");
         CloseableIterator<Row> iter = r1.execute().collect();
         while (iter.hasNext()) {
-            System.out.println(iter.next().getField(1));
+            Row row = iter.next();
+            System.out.println(row.getField(0));
         }
 
     }
