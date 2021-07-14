@@ -1,0 +1,17 @@
+-
+  taskName: "banana"
+  queries:
+    - "create view v1"
+    - "create view v2"
+  save:
+    - tableName: "tbl1"
+    - view: "v1"
+    - index: [1, 2]
+    - category: "system"
+    - unit: "action"
+-
+  taskName: "ba"
+  queries: ""
+  save:
+    - tableName: "tbl1"
+    - view: "v1"
