@@ -98,7 +98,8 @@ under the License.
 <!--		</dependency>-->
 
 
-		<!-- Add logging framework, to produce console output when running in the IDE. -->
+
+        <!-- Add logging framework, to produce console output when running in the IDE. -->
 		<!-- These dependencies are excluded from the application JAR by default. -->
         <dependency>
             <groupId>org.apache.flink</groupId>
@@ -145,6 +146,13 @@ under the License.
             <artifactId>json-simple</artifactId>
             <version>1.1</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.8.6</version>
+        </dependency>
+
 
 
 

@@ -1,15 +1,19 @@
-- # INIT
-  sql: >-
-    CREATE TABLE log (
-                         `message` Array<string>,
-                         `rowtime` TIMESTAMP(3) METADATA FROM 'timestamp',
-                         WATERMARK FOR `rowtime` AS `rowtime` - INTERVAL '1' SECOND
-    ) WITH (
-      'connector' = 'kafka',
-      'topic' = 'test',
-      'csv.array-element-delimiter' = '|',
-      'properties.bootstrap.servers' = 'localhost:9092',
-      'format' = 'csv'
-    )
-- # Define fields
-  sql: >-
+-
+    description: parser log from kafka
+    sql: >-
+        CREATE TABLE log (
+                             `message` Array<string>,
+                             `rowtime` TIMESTAMP(3) METADATA FROM 'timestamp',
+                             WATERMARK FOR `rowtime` AS `rowtime` - INTERVAL '1' SECOND
+        ) WITH (
+          'connector' = 'kafka',
+          'topic' = 'test',
+          'csv.array-element-delimiter' = '|',
+          'properties.bootstrap.servers' = 'localhost:9092',
+          'format' = 'csv'
+        )
+-
+    description: change to game format
+    sql: >-
+        some text
+
