@@ -2,10 +2,10 @@ package util;
 
 import org.apache.flink.table.api.TableColumn;
 import org.apache.flink.table.api.TableSchema;
+import org.apache.flink.table.utils.EncodingUtils;
 import org.apache.flink.table.utils.PrintUtils;
 import org.apache.flink.types.Row;
 
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -15,12 +15,12 @@ import java.util.stream.Stream;
 import static org.apache.flink.table.utils.PrintUtils.rowToString;
 
 public class Printer {
-    public static void printAsTableauForm(TableSchema tableSchema, Row row, PrintWriter printWriter) {
-        printAsTableauForm(tableSchema, row, printWriter, 30, "(NULL)", false, false);
+    public static void printAsTableauForm(TableSchema tableSchema, Row row, LoggerManager logger) {
+        printAsTableauForm(tableSchema, row, logger, 30, "(NULL)", false, false);
     }
 
     public static void printAsTableauForm(TableSchema tableSchema, Row row,
-                                          PrintWriter printWriter, int maxColumnWidth, String nullColumn,
+                                          LoggerManager logger, int maxColumnWidth, String nullColumn,
                                           boolean deriveColumnWidthByType, boolean printRowKind) {
         List<TableColumn> columns = tableSchema.getTableColumns();
         String[] columnNames = (String[]) columns.stream().map(TableColumn::getName).toArray((x$0) -> {
@@ -45,16 +45,13 @@ public class Printer {
         }
 
         String borderline = PrintUtils.genBorderLine(colWidths);
-        printWriter.println(borderline);
-        PrintUtils.printSingleRow(colWidths, columnNames, printWriter);
-        printWriter.println(borderline);
-        printWriter.flush();
+        logger.trace(borderline);
+        printSingleRow(colWidths, columnNames, logger);
+        logger.trace(borderline);
 
 
         String[] cols = rowToString(row, nullColumn, printRowKind);
-        PrintUtils.printSingleRow(colWidths, cols, printWriter);
-
-        printWriter.flush();
+        printSingleRow(colWidths, cols, logger);
     }
 
     private static int[] columnWidthsByContent(String[] columnNames, List<String[]> rows, int maxColumnWidth) {
@@ -74,5 +71,56 @@ public class Printer {
         }
 
         return colWidths;
+    }
+
+    public static void printSingleRow(int[] colWidths, String[] cols, LoggerManager logger) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("|");
+        int idx = 0;
+        String[] var5 = cols;
+        int var6 = cols.length;
+
+        for (int var7 = 0; var7 < var6; ++var7) {
+            String col = var5[var7];
+            sb.append(" ");
+            int displayWidth = PrintUtils.getStringDisplayWidth(col);
+            if (displayWidth <= colWidths[idx]) {
+                sb.append(EncodingUtils.repeat(' ', colWidths[idx] - displayWidth));
+                sb.append(col);
+            } else {
+                sb.append(truncateString(col, colWidths[idx] - "...".length()));
+                sb.append("...");
+            }
+
+            sb.append(" |");
+            ++idx;
+        }
+
+        logger.trace(sb.toString());
+    }
+
+    private static String truncateString(String col, int targetWidth) {
+        int passedWidth = 0;
+
+        int i;
+        for (i = 0; i < col.length(); ++i) {
+            if (PrintUtils.isFullWidth(Character.codePointAt(col, i))) {
+                passedWidth += 2;
+            } else {
+                ++passedWidth;
+            }
+
+            if (passedWidth > targetWidth) {
+                break;
+            }
+        }
+
+        String substring = col.substring(0, i);
+        int lackedWidth = targetWidth - PrintUtils.getStringDisplayWidth(substring);
+        if (lackedWidth > 0) {
+            substring = EncodingUtils.repeat(' ', lackedWidth) + substring;
+        }
+
+        return substring;
     }
 }

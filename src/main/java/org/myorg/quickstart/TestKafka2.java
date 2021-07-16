@@ -43,7 +43,7 @@ public class TestKafka2 {
                 new Thread(() -> {
                     while (iter.hasNext()) {
                         Row row = iter.next();
-                        Printer.printAsTableauForm(sqlTable.getTable().getSchema(), row, new PrintWriter(System.out));
+                        Printer.printAsTableauForm(sqlTable.getTable().getSchema(), row, Common.logger);
                     }
                 }).start();
                 Common.logger.warn("Done Submit SQL:", config.sql);
