@@ -1,7 +1,7 @@
 -
     description: parser log from kafka
     sql: >-
-        CREATE TABLE log (
+        CREATE TABLE RAW_DATA (
                              `message` Array<string>,
                              `rowtime` TIMESTAMP(3) METADATA FROM 'timestamp',
                              WATERMARK FOR `rowtime` AS `rowtime` - INTERVAL '1' SECOND
@@ -15,5 +15,10 @@
 -
     description: change to game format
     sql: >-
-        some text
+        CREATE VIEW log as SELECT
+        rowtime,
+        proctime() as `proctime`,
+        message[1] as `timestamp`,
+        message[2] as `userId`
+        FROM RAW_DATA
 

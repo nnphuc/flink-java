@@ -13,7 +13,7 @@ public class SqlTable {
         this.table = null;
     }
 
-    public SqlTable submit(StreamTableEnvironment tEnv, SqlTableConfig sqlConfig) {
+    public static SqlTable submit(StreamTableEnvironment tEnv, SqlTableConfig sqlConfig) {
         SqlTable sqlTable = new SqlTable(sqlConfig);
         sqlTable.table = tEnv.sqlQuery(sqlConfig.sql);
         return sqlTable;

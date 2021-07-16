@@ -10,9 +10,9 @@ public class TestYamlReader {
     public void testRead() throws Exception {
 
 
-        Common.debug.info(YAMLReader.convertYamlToJson("config/task/sqlExecute.yaml"));
+        Common.logger.info(YAMLReader.convertYamlToJson("config/task/sqlExecute.yaml"));
         ListSqlExecuteConfig list = new ListSqlExecuteConfig();
-        Common.debug.warn(list.listSqlTables.get(0).sql);
-        Common.debug.error(list.listSqlTables.get(0).sql);
+        Common.logger.warn(list.listSqlExecute.get(0).sql);
+        Common.logger.error(list.listSqlExecute.get(0).sql);
     }
 }

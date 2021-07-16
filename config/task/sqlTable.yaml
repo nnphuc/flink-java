@@ -1,19 +1,9 @@
 -
     description: parser log from kafka
     sql: >-
-        CREATE TABLE log (
-                             `message` Array<string>,
-                             `rowtime` TIMESTAMP(3) METADATA FROM 'timestamp',
-                             WATERMARK FOR `rowtime` AS `rowtime` - INTERVAL '1' SECOND
-        ) WITH (
-          'connector' = 'kafka',
-          'topic' = 'test',
-          'csv.array-element-delimiter' = '|',
-          'properties.bootstrap.servers' = 'localhost:9092',
-          'format' = 'csv'
-        )
--
-    description: change to game format
-    sql: >-
-        some text
+        SELECT HOP_START(rowtime, INTERVAL '1' SECOND, INTERVAL '3' SECOND) as startTime,
+        userId, count(*) as cntUser
+        FROM log
+        GROUP BY HOP(rowtime, INTERVAL '1' SECOND, INTERVAL '3' SECOND), userId
+
 

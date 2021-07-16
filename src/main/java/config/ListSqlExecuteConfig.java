@@ -8,7 +8,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 public class ListSqlExecuteConfig {
-    public List<SqlExecuteConfig> listSqlTables;
+    public List<SqlExecuteConfig> listSqlExecute;
 
     public ListSqlExecuteConfig() {
         reloadConfig();
@@ -19,9 +19,9 @@ public class ListSqlExecuteConfig {
             String json = YAMLReader.convertYamlToJson("config/task/sqlExecute.yaml");
             Type type = new TypeToken<List<SqlExecuteConfig>>() {
             }.getType();
-            listSqlTables = new Gson().fromJson(json, type);
+            listSqlExecute = new Gson().fromJson(json, type);
         } catch (Exception e) {
-            Common.debug.error(e);
+            Common.logger.error(e);
         }
     }
 }

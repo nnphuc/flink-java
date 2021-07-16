@@ -65,6 +65,19 @@ public class LoggerManager {
         logger.warn(toString(args));
     }
 
+    public void fatal(Object... args) {
+        logger.fatal(toString(args));
+    }
+
+    public void trace(Object... args) {
+        logger.trace(toString(args));
+    }
+
+    public void debug(Object... args) {
+        logger.debug(toString(args));
+    }
+
+
     public String stackTraceToString(StackTraceElement[] elements) {
         StringBuilder builder = new StringBuilder();
 
