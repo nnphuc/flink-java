@@ -9,7 +9,7 @@ public class Common {
     public static final String CONFIG_FOLDER = "config/";
     public static final String LOG4J_CONFIG = "config/log4j2.xml";
 
-    static {
+    public static void initConfigurationLogger() {
         LoggerContext context = (org.apache.logging.log4j.core.LoggerContext) LogManager.getContext(false);
         File file = new File(LOG4J_CONFIG);
         context.setConfigLocation(file.toURI());

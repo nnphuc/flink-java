@@ -12,15 +12,22 @@ import org.apache.flink.util.CloseableIterator;
 import sql.SqlExecute;
 import sql.SqlTable;
 import util.Common;
+import util.LoggerManager;
 import util.Printer;
 
-import java.io.PrintWriter;
 
 public class TestKafka2 {
     public static void main(String[] args) throws Exception {
+        Common.initConfigurationLogger();
+        LoggerManager jsonReader = new LoggerManager("JSONReader");
+        jsonReader.error("--- init reader");
+
+
         // set up the streaming execution environment
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         final StreamTableEnvironment tEnv = StreamTableEnvironment.create(env);
+
+
 
         ListSqlExecuteConfig listSqlExecuteConfig = new ListSqlExecuteConfig();
         for (SqlExecuteConfig config : listSqlExecuteConfig.listSqlExecute) {

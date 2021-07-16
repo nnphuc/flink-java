@@ -25,6 +25,7 @@ import org.json.JSONObject;
 
 public class JSONReader {
     private static final LoggerManager logger = new LoggerManager("JSONReader");
+
     public JSONReader() {
         super();
     }
@@ -323,7 +324,7 @@ public class JSONReader {
 
             return data;
         } catch (JSONException var4) {
-            logger.error(new Object[] { var4 });
+            logger.error(new Object[]{var4});
             return "";
         }
     }
@@ -468,7 +469,7 @@ public class JSONReader {
                 Date[] temp = new Date[length];
                 int i = 0;
                 while (i < length) {
-                    temp[i] = df.parse( (String) arr.get(i));
+                    temp[i] = df.parse((String) arr.get(i));
 
                     ++i;
                 }
@@ -491,7 +492,7 @@ public class JSONReader {
                 Date[] temp = new Date[length];
                 int i = 0;
                 while (i < length) {
-                    temp[i] = df.parse( (String) arr.get(i));
+                    temp[i] = df.parse((String) arr.get(i));
 
                     ++i;
                 }

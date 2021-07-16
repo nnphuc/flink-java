@@ -1,5 +1,5 @@
 import config.ListSqlExecuteConfig;
-import config.YAMLReader;
+import util.YAMLReader;
 import org.junit.Test;
 import util.Common;
 
