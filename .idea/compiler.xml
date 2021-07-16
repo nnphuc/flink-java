@@ -10,7 +10,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="quickstart" target="14" />
+      <module name="quickstart" target="8" />
     </bytecodeTargetLevel>
   </component>
 </project>

@@ -1,7 +1,8 @@
 package util;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 
 public class LoggerManager {
     public static final String NEW_LINE = "\n";
@@ -10,7 +11,7 @@ public class LoggerManager {
     public LoggerManager(String category) {
         super();
 
-        logger = LoggerFactory.getLogger(category);
+        logger = LogManager.getLogger(category);
     }
 
     /**
