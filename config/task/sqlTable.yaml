@@ -6,4 +6,11 @@
         FROM log
         GROUP BY HOP(rowtime, INTERVAL '1' SECOND, INTERVAL '3' SECOND), userId
 
+-
+    description: parser log from kafka
+    sql: >-
+        SELECT HOP_START(rowtime, INTERVAL '1' SECOND, INTERVAL '1' SECOND) as x,
+        userId, count(distinct userId)
+        FROM log
+        GROUP BY HOP(rowtime, INTERVAL '1' SECOND, INTERVAL '1' SECOND), userId
 
